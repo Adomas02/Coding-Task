@@ -3,18 +3,21 @@ package lt.adomas.codingtask;
 
 import org.springframework.stereotype.Service;
 
-import java.io.*;
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.io.OutputStreamWriter;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
-import java.util.function.Function;
 import java.util.stream.Stream;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
 
-import static java.lang.Character.*;
+import static java.lang.Character.isDigit;
+import static java.lang.Character.isLetter;
 import static java.util.Comparator.comparing;
+import static java.util.function.Function.identity;
 import static java.util.stream.Collectors.*;
 
 @Service
@@ -25,7 +28,7 @@ public class CodingTaskService {
         Map<String, Long> wordMap = Stream.of(newText.split("[ (),.!#$%&+^/=@:\r\n\t]"))
                 .map(this::normalizeWord)
                 .filter(word -> word.matches(".*[A-Z].*"))
-                .collect(groupingByConcurrent(Function.identity(), counting()));
+                .collect(groupingByConcurrent(identity(), counting()));
 
 
         return wordMap
