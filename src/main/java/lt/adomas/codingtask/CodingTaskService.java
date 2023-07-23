@@ -51,7 +51,6 @@ public class CodingTaskService {
 
     }
 
-
     public byte[] resultToZip(String inputFileContent) {
 
         ConcurrentMap<String, List<WordFrequency>> fileWordMap = groupingByFiles(inputFileContent);
@@ -95,7 +94,7 @@ public class CodingTaskService {
 
                 ));
 
-        fileWordMap=new ConcurrentHashMap<>(fileWordMap);// perkuriam mapa kad butu modifikuojamas, kad .put nenuluztu
+        fileWordMap=new ConcurrentHashMap<>(fileWordMap);
         fileWordMap.put("output.txt", wordList
                 .parallelStream()
                 .sorted(comparing(WordFrequency::getWord))
