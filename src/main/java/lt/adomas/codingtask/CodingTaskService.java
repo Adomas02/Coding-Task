@@ -33,9 +33,7 @@ public class CodingTaskService {
                 .parallelStream()
                 .map(WordFrequency::new)
                 .toList();
-/*        for(var word:result){
-            System.out.println(word.getWord()+word.getFrequency());
-        }*/
+
 
         return result;
     }
