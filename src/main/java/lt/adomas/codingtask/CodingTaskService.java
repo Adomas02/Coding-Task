@@ -28,14 +28,11 @@ public class CodingTaskService {
                 .collect( groupingByConcurrent( Function.identity(), counting() ));
 
 
-        var result  = wordMap
+        return wordMap
                 .entrySet()
                 .parallelStream()
                 .map(WordFrequency::new)
                 .toList();
-
-
-        return result;
     }
 
     private String normalizeWord(String word){
