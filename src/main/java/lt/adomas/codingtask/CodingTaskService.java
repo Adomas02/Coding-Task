@@ -22,10 +22,10 @@ public class CodingTaskService {
 
     private List<WordFrequency> countFrequencies(String newText) {
 
-        Map<String, Long> wordMap = Stream.of(newText.split("[ (),.:\r\n\t]"))
+        Map<String, Long> wordMap = Stream.of(newText.split("[ (),.!#$%&+^/=@:\r\n\t]"))
                 .map(this::normalizeWord)
                 .filter(word -> word.matches(".*[A-Z].*"))
-                .collect( groupingByConcurrent( Function.identity(), counting() ));
+                .collect(groupingByConcurrent(Function.identity(), counting()));
 
 
         return wordMap
@@ -35,17 +35,18 @@ public class CodingTaskService {
                 .toList();
     }
 
-    private String normalizeWord(String word){
-        word=word.trim();
-        if(!word.isEmpty()){
-            if(!isLetter(word.charAt(0))&&!isDigit(word.charAt(0))){
+    private String normalizeWord(String word) {
+        word = word.trim();
+
+        if (!word.isEmpty()) {
+            while (!word.isEmpty() && !isLetter(word.charAt(0)) && !isDigit(word.charAt(0))) {
                 word = word.substring(1);
-            } else if (!isLetter(word.charAt(word.length()-1))&&!isDigit(word.charAt(word.length()-1))) {
-                word = word.substring(word.length()-1);
+            }
+            while (!word.isEmpty() && !isLetter(word.charAt(word.length() - 1)) && !isDigit(word.charAt(word.length() - 1))) {
+                word = word.substring(0,word.length() - 1);
             }
             return word.toUpperCase();
-        }
-        else {
+        } else {
             return word;
         }
 
@@ -59,7 +60,7 @@ public class CodingTaskService {
         try (ZipOutputStream zipOutputStream = new ZipOutputStream(out)) {
             var writer = new OutputStreamWriter(zipOutputStream);
 
-            for(var fw:fileWordMap.entrySet()){
+            for (var fw : fileWordMap.entrySet()) {
                 zipOutputStream.putNextEntry(new ZipEntry(fw.getKey()));
                 zipOutputStream.flush();
 
@@ -94,7 +95,7 @@ public class CodingTaskService {
 
                 ));
 
-        fileWordMap=new ConcurrentHashMap<>(fileWordMap);
+        fileWordMap = new ConcurrentHashMap<>(fileWordMap);
         fileWordMap.put("output.txt", wordList
                 .parallelStream()
                 .sorted(comparing(WordFrequency::getWord))
